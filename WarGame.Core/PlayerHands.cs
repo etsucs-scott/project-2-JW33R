@@ -8,10 +8,13 @@ namespace WarGame.Core
 {
     public class PlayerHands
     {
+        public Hand Hand { get; private set; }
         public Dictionary<string, Hand> Hands { get; private set; }
         public PlayerHands() 
         {
+            Hand = new Hand();
             Hands = new Dictionary<string, Hand>();
         }
+    
     }
 }

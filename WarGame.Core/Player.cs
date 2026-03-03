@@ -9,5 +9,10 @@ namespace WarGame.Core
     public class Player
     {
         public PlayerHands PlayerHands { get; private set; }
+
+        public Player()
+        {
+            PlayerHands = new PlayerHands();
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace WarGame.Core
         public Card Card { get; private set; }
         public Stack<Card> Cards { get; private set; }
 
+        public List<Card> ShuffledCards { get; private set; }
+
         /// <summary>
         /// Initializes a new Stack of Cards with 52 Cards
         /// </summary>
@@ -29,10 +31,20 @@ namespace WarGame.Core
 
         public void Shuffle() 
         {
-            Random random = new Random();
-            foreach (var c in Cards) 
+            ShuffledCards = new();
+            foreach (Card card in Cards) 
             {
-                Cards.Push(c);
+                ShuffledCards.Add(card);
+            }
+            for (int i = Cards.Count - 1; i > 0; i--) 
+            {
+                int j = Random.Shared.Next(i + 1);
+                (ShuffledCards[i], ShuffledCards[j]) = (ShuffledCards[j], ShuffledCards[i]);
+            }
+            Cards.Clear();
+            foreach (Card card in ShuffledCards) 
+            {
+                Cards.Push(card);
             }
         }
     }

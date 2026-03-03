@@ -9,5 +9,9 @@ namespace WarGame.Core
     public class Hand
     {
         public Queue<Card> Cards { get; private set; }
+        public Hand() 
+        {
+            Cards = new Queue<Card>();
+        }
     }
 }

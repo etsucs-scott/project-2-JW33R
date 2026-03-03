@@ -11,25 +11,37 @@ namespace WarGame.Core
         public Deck Deck { get; private set; }
         public PlayedCards PlayedCards { get; private set; }
         public Player Player { get; private set; }
-        public GameEngine() 
+        public List<Player> Players { get; private set; }
+        public GameEngine()
         {
+            Players = new List<Player>();
             Deck = new Deck();
             PlayedCards = new PlayedCards();
-            Player = new Player();
         }
 
-        public void StartGame() 
+        public void StartGame(int playerCount)
         {
             Deck.Shuffle();
+            PlayerCount(playerCount);
+            DealCards();
         }
 
-        public void DealCards(Player player) 
+        public void DealCards()
         {
-            foreach (Card card in Deck.Cards)
+            foreach (Player p in Players)
             {
-                //player.PlayerHands.Hands["Player1"] = card;
+                p.PlayerHands.Hand.Cards.Enqueue(Deck.Cards.Pop());
             }
 
+
+        }
+        public void PlayerCount(int playerCount)
+        {
+            for (int i = 0; i < playerCount; i++)
+            {
+                Player player = new Player();
+                Players.Add(player);
+            }
         }
     }
 }
