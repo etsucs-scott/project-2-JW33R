@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
-    internal class PlayerHands
+    public class PlayerHands
     {
+        public Dictionary<string, Hand> Hands { get; private set; }
+        public PlayerHands() 
+        {
+            Hands = new Dictionary<string, Hand>();
+        }
     }
 }

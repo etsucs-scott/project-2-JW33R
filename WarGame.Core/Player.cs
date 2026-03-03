@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
-    public class Hand
+    public class Player
     {
-        public Queue<Card> Cards { get; private set; }
+        public PlayerHands PlayerHands { get; private set; }
     }
 }

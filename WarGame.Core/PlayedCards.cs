@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
-    internal class PlayedCards
+    public class PlayedCards
     {
+        public Dictionary<string, Card> Cards { get; private set; }
     }
 }
