@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarGame.Console", "WarGame.Console\WarGame.Console.csproj", "{3C8CE0C2-59D0-4EE7-AF02-829C3C397D28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarGame.Cli", "WarGame.Console\WarGame.Cli.csproj", "{3C8CE0C2-59D0-4EE7-AF02-829C3C397D28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarGame.Core", "WarGame.Core\WarGame.Core.csproj", "{525C7AF5-F37D-44B6-9FB9-93E2253EF37D}"
 EndProject
@@ -44,5 +44,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {995A6F36-674D-472F-B863-99093A7ADA70}
 	EndGlobalSection
 EndGlobal
