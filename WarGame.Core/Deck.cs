@@ -23,7 +23,7 @@ namespace WarGame.Core
             {
                 foreach (Rank rank in Enum.GetValues<Rank>()) 
                 {
-                    Cards.Push(new Card(suit, rank));
+                    Cards.Push(new Card(rank, suit));
                 }
             }
 

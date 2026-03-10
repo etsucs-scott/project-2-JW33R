@@ -22,14 +22,12 @@ namespace WarGame.Cli
             int playerIndex = 1;
             for (int i = 0; i < gameEngine.Cards.Count; i++)
             {
-                //if (gameEngine.Cards.Count > playerCount)
-                //{
-                //    Console.WriteLine(gameEngine.Cards.Count);
-                //    i = gameEngine.Cards.Count - playerCount;
-                //    playerIndex = 1;
-                //}
                 Console.WriteLine($"Player {playerIndex} played {gameEngine.Cards[i].Rank} of {gameEngine.Cards[i].Suit}");
                 playerIndex++;
+                if (playerIndex > 4)
+                {
+                    playerIndex = 1;
+                }
             }
         }
     }

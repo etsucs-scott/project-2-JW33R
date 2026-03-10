@@ -12,7 +12,7 @@ while (round < 10000)
 {
     consoleRender.gameEngine.PlayRound();
     consoleRender.DisplayRoundCards(countOfPlayers);
-    Console.WriteLine($"The Winner of this round is {consoleRender.gameEngine.CheckWinner().Rank} of {consoleRender.gameEngine.CheckWinner().Suit}");
+    Console.WriteLine(consoleRender.gameEngine.PrintWinner(consoleRender.gameEngine.WinningCard));
     Console.ReadLine();
 }
 
