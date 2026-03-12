@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,14 +69,15 @@ namespace WarGame.Core
             Cards.Clear();
             for (int i = 0; i < Players.Count; i++) 
             {
-                //if (Players[i].PlayerHands.Hand.Cards.Count > 0)
-                //{
+                if (Players[i].PlayerHands.Hand.Cards.Count > 0)
+                {
                     var card = Players[i].PlayerHands.Hand.Cards.Dequeue();
                     Players[i].PlayedCards.Cards[$"Player {i + 1}"] = card;
                     Cards.Add(card);
-                //}
+                }
             }
             CheckWinner();
+            KickPlayer();
         }
         /// <summary>
         /// Used to get the previous index in a sequence
@@ -105,9 +107,9 @@ namespace WarGame.Core
             int winningPlayerIndex = 0;
             for (int i = 0; i < Players.Count; i++) 
             {
-                if (Cards.Count < 5)
+                if (Cards.Count < Players.Count + 1)
                 {
-                    var card = Players[i].PlayedCards.Cards[$"Player {i + 1}"];
+                    var card = Players[i].PlayedCards.Cards[$"Player {i + 1}"]; 
                     if (card.Rank >= Players[i - RecursiveFormula(i)].PlayedCards.Cards.Values.Max().Rank)
                     {
                         if (Players[i - RecursiveFormula(i)].PlayedCards.Cards.Values.Max().Rank == card.Rank)
@@ -123,18 +125,13 @@ namespace WarGame.Core
                         winningCard = card;
                     }
                 }
-                else 
-                {
-                    Players[i].PlayedCards.Cards.Clear();
-                    Players[i].SetTied(false);
-                }
             }
             WinningCard = winningCard;
             if (countOfTies > 1)
             {
                 StartWar(countOfTies);
             }
-            else 
+            else if (countOfTies <= 1) 
             {
                 GiveWinnerCards(winningPlayerIndex);
             }
@@ -153,13 +150,18 @@ namespace WarGame.Core
         {
             for (int i = 0; i < Players.Count; i++) 
             {
+                Players[i].PlayedCards.Cards.Clear();
+                
                 if (Players[i].IsTied == true)
                 {
-                    Players[i].PlayedCards.Cards[$"Player {i + 1}"] = Players[i].PlayerHands.Hand.Cards.Dequeue();
-                    Cards.Add(Players[i].PlayedCards.Cards[$"Player {i + 1}"]);
+                    if (Players[i].PlayerHands.Hand.Cards.Count > 0) 
+                    {
+                        Players[i].PlayedCards.Cards[$"Player {i + 1}"] = Players[i].PlayerHands.Hand.Cards.Dequeue();
+                        Cards.Add(Players[i].PlayedCards.Cards[$"Player {i + 1}"]);
+                    }
                 }
+                Players[i].SetTied(false);
             }
-            CheckWinner();
             CheckWinner();
         }
         public void GiveWinnerCards(int index) 
@@ -168,6 +170,22 @@ namespace WarGame.Core
             {
                 Players[index].PlayerHands.Hand.Cards.Enqueue(Cards[i]);
             }
+        }
+        public void KickPlayer() 
+        {
+            int playerIndex = 0;
+            for (int i = 0; i < Players.Count; i++)
+            {
+                if (Players[i].PlayerHands.Hand.Cards.Count <= 0)
+                {
+                    playerIndex = i;
+                }
+            }
+            if (Players[playerIndex].PlayerHands.Hand.Cards.Count <= 0)
+            {
+                Players.Remove(Players[playerIndex]);
+            }
+            
         }
     }
 }

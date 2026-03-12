@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
-    public class Card
+    public class Card : IComparable<Card>
     {
         public Rank Rank { get; private set; }
         public Suit Suit { get; private set; }
@@ -14,6 +14,15 @@ namespace WarGame.Core
         {
             Rank = rank;
             Suit = suit;
+        }
+
+        public int CompareTo(Card? other)
+        {
+            if (other == null) 
+            {
+                return 1;
+            }
+            return Rank.CompareTo(other.Rank);
         }
     }
 }

@@ -29,6 +29,14 @@ namespace WarGame.Cli
                     playerIndex = 1;
                 }
             }
+            DisplayPlayerCardCount();
+        }
+        public void DisplayPlayerCardCount() 
+        {
+            foreach (var player in gameEngine.Players) 
+            {
+                Console.WriteLine($"Player {player.PlayerHands.Hand.Cards.Count}");
+            }
         }
     }
 }
