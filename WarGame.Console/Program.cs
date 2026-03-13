@@ -11,9 +11,11 @@ consoleRender.gameEngine.StartGame(countOfPlayers);
 while (round < 10000) 
 {
     consoleRender.gameEngine.PlayRound();
-    consoleRender.DisplayRoundCards(countOfPlayers);
+    consoleRender.DisplayRoundCards(consoleRender.gameEngine.CountOfTies());
+    consoleRender.DisplayPlayerCardCount();
     Console.WriteLine(consoleRender.gameEngine.PrintWinner(consoleRender.gameEngine.WinningCard));
     Console.ReadLine();
+    round++;
 }
 
 

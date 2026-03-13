@@ -107,24 +107,22 @@ namespace WarGame.Core
             int winningPlayerIndex = 0;
             for (int i = 0; i < Players.Count; i++) 
             {
-                if (Cards.Count < Players.Count + 1)
+                Card card = Cards[i];
+                if (Cards.Count > Players.Count)
                 {
-                    var card = Players[i].PlayedCards.Cards[$"Player {i + 1}"]; 
-                    if (card.Rank >= Players[i - RecursiveFormula(i)].PlayedCards.Cards.Values.Max().Rank)
-                    {
-                        if (Players[i - RecursiveFormula(i)].PlayedCards.Cards.Values.Max().Rank == card.Rank)
-                        {
-                            countOfTies++;
-                            Players[i].SetTied(true);
-                        }
-                        winningCard = card;
-                        winningPlayerIndex = i;
-                    }
-                    else if (winningCard.Rank == Rank.Two && winningCard.Suit == Suit.Hearts)
-                    {
-                        winningCard = card;
-                    }
+                    card = Cards[i + Players.Count];
                 }
+                if (card.Rank >= Cards[i - RecursiveFormula(i)].Rank)
+                {
+                    winningCard = card;
+                    winningPlayerIndex = i;
+                }
+                else if (winningCard.Rank == Rank.Two && winningCard.Suit == Suit.Hearts)
+                {
+                    winningCard = card;
+                }
+                IsTied(countOfTies, i, card);
+
             }
             WinningCard = winningCard;
             if (countOfTies > 1)
@@ -171,7 +169,7 @@ namespace WarGame.Core
                 Players[index].PlayerHands.Hand.Cards.Enqueue(Cards[i]);
             }
         }
-        public void KickPlayer() 
+        public void KickPlayer()
         {
             int playerIndex = 0;
             for (int i = 0; i < Players.Count; i++)
@@ -185,7 +183,26 @@ namespace WarGame.Core
             {
                 Players.Remove(Players[playerIndex]);
             }
-            
+
+        }
+        public int CountOfTies() 
+        {
+            int count = 0;
+            foreach (Player player in Players)
+            {
+                if (player.IsTied) 
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        public void IsTied(int CountOfTies, int i, Card card)
+        {
+            if (Cards[i - RecursiveFormula(i)].Rank == card.Rank)
+            {
+                Players[i].SetTied(true);
+            }
         }
     }
 }
