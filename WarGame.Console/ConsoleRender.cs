@@ -23,7 +23,7 @@ namespace WarGame.Cli
             int playerIndex = 1;
             for (int i = 0; i < gameEngine.Cards.Count; i++)
             {
-                if (gameEngine.Cards.Count > 4)
+                if (i > gameEngine.Players.Count)
                 {
                     break;
                 }
@@ -31,40 +31,26 @@ namespace WarGame.Cli
                 playerIndex++;
                 
             }
-            if (countOfTies >= 2) 
-            {
+            //if (countOfTies >= 2) 
+            //{
                 DisplayTiedCard();
-            }
+            //}
             
         }
         public void DisplayTiedCard() 
         {
-            //int playerIndex = 1;
-            //for (int i = 0; i < gameEngine.Players.Count; i++)
-            //{
-            //    if (gameEngine.Players[i].IsTied) 
-            //    {
-            //        Console.WriteLine("Hello");
-            //        Console.WriteLine($"Player {playerIndex} played {gameEngine.Cards[i].Rank} of {gameEngine.Cards[i].Suit}");
-            //    }
-            //    playerIndex++;
-            //    if (gameEngine.Cards.Count > 4) 
-            //    {
-            //        break;
-            //    }
-            //}
             foreach (var player in gameEngine.Players)
             {
-                foreach (var item in player.PlayedCards.Cards)
+                int index = 1;
+                if (gameEngine.Cards.Count > gameEngine.Players.Count)
                 {
-                    if (gameEngine.Cards.Count > 4)
-                    {
-                        
-                    }
-                    Console.WriteLine($"{item.Key} played the {item.Value.Rank} of {item.Value.Suit}");
-                    
-                }
 
+                    if (player.PlayedCards.Cards.ContainsKey($"Player {index + 1}")) 
+                    {
+                        Console.WriteLine($"Player {index + 1} played the {player.PlayedCards.Cards[$"Player {index + 1}"].Rank} of {player.PlayedCards.Cards[$"Player {index + 1}"].Suit}");
+                    }
+                }
+                index++;
             }
         }
         public void DisplayPlayerCardCount() 

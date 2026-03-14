@@ -107,10 +107,13 @@ namespace WarGame.Core
             int winningPlayerIndex = 0;
             for (int i = 0; i < Players.Count; i++) 
             {
+                Console.WriteLine(Cards[i]);
                 Card card = Cards[i];
-                if (Cards.Count > Players.Count)
+                if (Cards.Count > Players.Count && Players[i].PlayedCards.Cards.ContainsKey($"Player {i + 1}"))
                 {
-                    card = Cards[i + Players.Count];
+                    Console.WriteLine(Cards.Count);
+                    Console.WriteLine(i + 1 + Players.Count);
+                    card = Players[i].PlayedCards.Cards[$"Player {i + 1}"];
                 }
                 if (card.Rank >= Cards[i - RecursiveFormula(i)].Rank)
                 {
@@ -121,7 +124,10 @@ namespace WarGame.Core
                 {
                     winningCard = card;
                 }
-                IsTied(countOfTies, i, card);
+                if (IsTied(i, card) == true) 
+                {
+                    countOfTies++;
+                }
 
             }
             WinningCard = winningCard;
@@ -197,12 +203,14 @@ namespace WarGame.Core
             }
             return count;
         }
-        public void IsTied(int CountOfTies, int i, Card card)
+        public bool IsTied(int i, Card card)
         {
             if (Cards[i - RecursiveFormula(i)].Rank == card.Rank)
             {
                 Players[i].SetTied(true);
+                return true;
             }
+            return false;
         }
     }
 }
