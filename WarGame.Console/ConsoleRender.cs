@@ -20,35 +20,42 @@ namespace WarGame.Cli
         }
         public void DisplayRoundCards(int countOfTies) 
         {
-            int playerIndex = 1;
-            for (int i = 0; i < gameEngine.Cards.Count; i++)
+            int cardIndex = 0;
+            foreach (var player in gameEngine.Players)
             {
-                if (i > gameEngine.Players.Count)
+                foreach (var item in player.PlayerHands.Hands)
                 {
-                    break;
+                    Console.WriteLine($"{item.Key} Played {gameEngine.Cards[cardIndex].Rank} of {gameEngine.Cards[cardIndex].Suit} ");
+
                 }
-                Console.WriteLine($"Player {playerIndex} played {gameEngine.Cards[i].Rank} of {gameEngine.Cards[i].Suit}");
-                playerIndex++;
-                
+                cardIndex++;
             }
-            //if (countOfTies >= 2) 
-            //{
+            if (countOfTies > 1)
+            {
                 DisplayTiedCard();
-            //}
+            }
+            
             
         }
         public void DisplayTiedCard() 
         {
-            foreach (var player in gameEngine.Players)
+            int index = 0;
+            foreach (var player in gameEngine.TiedPlayers)
             {
-                int index = 1;
+                if (gameEngine.TiedPlayers.Count <= 1)
+                {
+                    Console.WriteLine("In Disolay");
+                    break;
+                }
+                bool playerIndex = player.PlayedCards.Cards.ContainsKey($"Player {index + 1}");
                 if (gameEngine.Cards.Count > gameEngine.Players.Count)
                 {
 
-                    if (player.PlayedCards.Cards.ContainsKey($"Player {index + 1}")) 
+                    if (playerIndex) 
                     {
                         Console.WriteLine($"Player {index + 1} played the {player.PlayedCards.Cards[$"Player {index + 1}"].Rank} of {player.PlayedCards.Cards[$"Player {index + 1}"].Suit}");
                     }
+
                 }
                 index++;
             }
