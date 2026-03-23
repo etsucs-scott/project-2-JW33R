@@ -152,8 +152,7 @@ namespace WarGame.Core
                 if (player.PlayerHands.Hand.Cards.Count > 0)
                 {
                     Cards.Add(player.PlayerHands.Hand.Cards.Peek());
-                    player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"] = player.PlayerHands.Hand.Cards.Dequeue();
-                    
+                    player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"] = player.PlayerHands.Hand.Cards.Dequeue(); 
                 }
             }
             CheckWinnerIfTie();
