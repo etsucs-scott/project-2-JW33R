@@ -42,20 +42,10 @@ namespace WarGame.Cli
         /// <summary>
         /// Shows the tied cards between the players if any
         /// </summary>
-        public void DisplayTiedCard() 
+        public void DisplayTiedCard()
         {
-            Console.WriteLine();
-            foreach (var player in GameEngine.TiedPlayers)
-            {
-                foreach (var key in player.PlayedCards.Cards.Keys)
-                {
-                    if (GameEngine.Cards.Count > GameEngine.Players.Count)
-                    {
-                        Console.WriteLine($"{key}: {player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"].Rank}");
-
-                    }
-                }
-            }
+            Console.WriteLine($"{GameEngine.RoundResult}");
+            
         }
         /// <summary>
         /// Shows the current Player Card Count at the end of the round
