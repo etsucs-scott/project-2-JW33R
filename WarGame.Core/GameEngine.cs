@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,7 +19,6 @@ namespace WarGame.Core
         public Card WinningCard { get; private set; }
         public List<Card> Cards { get; private set; }
         public Deck Deck { get; private set; }
-        public Player Player { get; private set; }
         public List<Player> Players { get; private set; }
         public GameEngine()
         {
@@ -28,13 +28,19 @@ namespace WarGame.Core
             Deck = new Deck();
             TiedPlayers = new();
         }
-
+        /// <summary>
+        /// Function that shuffles the deck, gets player count and deals cards
+        /// </summary>
+        /// <param name="playerCount"></param>
         public void StartGame(int playerCount)
         {
             Deck.Shuffle();
             PlayerCount(playerCount);
             DealCards();
         }
+        /// <summary>
+        /// Deals cards to each player
+        /// </summary>
         public void DealCards()
         {
             var topCard = Deck.Cards.Peek();
@@ -62,10 +68,13 @@ namespace WarGame.Core
             for (int i = 0; i < playerCount; i++)
             {
                 Player player = new Player();
+                player.SetName($"Player {i + 1}");
                 Players.Add(player);
             }
         }
-
+        /// <summary>
+        /// Plays a round of war and deals the cards to each player
+        /// </summary>
         public void PlayRound() 
         {
             TiedPlayers.Clear();
@@ -78,59 +87,25 @@ namespace WarGame.Core
                     Players[i].PlayedCards.Cards[$"Player {i + 1}"] = card;
                     Cards.Add(card);
                 }
+                Players[i].SetIndexNumber(0);
             }
-            CheckWinner();
+            CheckWinnerIfNoTie();
             KickPlayer();
         }
         /// <summary>
-        /// Used to get the previous index in a sequence
+        /// Checks to see who the winner is without a tie
         /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public int RecursiveFormula(int count) 
+        public void CheckWinnerIfNoTie() 
         {
-            if (count == 0)
-            {
-                return 0;
-            }
-            else if (count == 1)
-            {
-                return 1;
-            }
-            else 
-            {
-                return RecursiveFormula(count - 1);
-            }
-        }
-
-        public void CheckWinner() 
-        {
-            Card winningCard = new(Rank.Two, Suit.Hearts);
             int winningPlayerIndex = 0;
-            Card card = Cards[0];
-            TiedPlayers.Clear();
+            WinningCard = Cards.Max();
             for (int i = 0; i < Players.Count; i++) 
             {
-                if (Cards.Count > Players.Count && Players[i].PlayedCards.Cards.ContainsKey($"Player {i + 1}"))
+                if (Players[i].PlayedCards.Cards[$"Player {i + 1}"].Rank == WinningCard.Rank)
                 {
-                    card = Players[i].PlayedCards.Cards[$"Player {i + 1}"];
-                }
-                else if (Cards.Count < Players.Count && i == 0)
-                {
-                    winningCard = card;
-                }
-                if (card.Rank > Cards[i - RecursiveFormula(i)].Rank)
-                {
-                    winningCard = card;
                     winningPlayerIndex = i;
                 }
-                //else if (winningCard.Rank == Rank.Two && winningCard.Suit == Suit.Hearts)
-                //{
-                //    winningCard = card;
-                //}
-
             }
-            WinningCard = winningCard;
             
             if (IsTied(WinningCard))
             {
@@ -143,27 +118,71 @@ namespace WarGame.Core
             
         }
         /// <summary>
+        /// Checks to see the winner is assuming there is a tie
+        /// </summary>
+        public void CheckWinnerIfTie()
+        {
+            int winningPlayerIndex = 0;
+            WinningCard = Cards[Players.Count..].Max();
+            foreach (Player player in TiedPlayers)
+            {
+                if (player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"].Rank == WinningCard.Rank)
+                {
+                    winningPlayerIndex = player.IndexNumber;
+                }
+            }
+        }
+        /// <summary>
         /// Returns the winning card 
         /// </summary>
         /// <param name="winningCard">Takes in the winning card</param>
         /// <returns></returns>
         public string PrintWinner(Card winningCard) 
         {
-            return $"Player {winningCard.Rank} of {winningCard.Suit} wins the round!";
+            return $"{winningCard.Rank} of {winningCard.Suit} wins the round!";
         }
+        /// <summary>
+        /// Starts to deal out cards to the players that tied
+        /// </summary>
         public void StartWar()
         {
-            int i = 0;
             foreach (Player player in TiedPlayers)
             {
-                Console.WriteLine("In StartWar");
-                player.PlayedCards.Cards.Clear();
-                player.PlayedCards.Cards[$"Player {i + 1}"] = player.PlayerHands.Hand.Cards.Dequeue();
-                Cards.Add(player.PlayedCards.Cards[$"Player {i + 1}"]);
-                i++;
+                if (player.PlayerHands.Hand.Cards.Count > 0)
+                {
+                    player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"] = player.PlayerHands.Hand.Cards.Dequeue();
+                    Cards.Add(player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"]);
+                }
             }
-            CheckWinner();
+            CheckWinnerIfTie();
         }
+        /// <summary>
+        /// Gets the player with the highest card count
+        /// </summary>
+        /// <returns></returns>
+        public List<Player> HighestCards()
+        {
+            int highestCard = 0;
+            Player highestCardPlayer = null;
+            List<Player> highestCardPlayers = new();
+            foreach (Player player in Players)
+            {
+                if (player.PlayerHands.Hand.Cards.Count > highestCard)
+                {
+                    highestCard = player.PlayerHands.Hand.Cards.Count;
+                    highestCardPlayer = player;
+                }
+                if (player.PlayerHands.Hand.Cards.Count == highestCard && !highestCardPlayers.Contains(player))
+                {
+                    highestCardPlayers.Add(player);
+                }
+            }
+            return highestCardPlayers;
+        }
+        /// <summary>
+        /// Gives the winner the cards from the pot
+        /// </summary>
+        /// <param name="index"></param>
         public void GiveWinnerCards(int index) 
         {
             for (int i = 0; i < Cards.Count; i++) 
@@ -171,6 +190,9 @@ namespace WarGame.Core
                 Players[index].PlayerHands.Hand.Cards.Enqueue(Cards[i]);
             }
         }
+        /// <summary>
+        /// Kicks a player from the game
+        /// </summary>
         public void KickPlayer()
         {
             int playerIndex = 0;
@@ -187,15 +209,11 @@ namespace WarGame.Core
             }
 
         }
-        public int CountOfTies() 
-        {
-            int count = 0;
-            foreach (Player player in TiedPlayers)
-            {
-                count++;
-            }
-            return count;
-        }
+        /// <summary>
+        /// Checks to see if the player is tied with another player
+        /// </summary>
+        /// <param name="winningCard"></param>
+        /// <returns></returns>
         public bool IsTied(Card winningCard)
         {
             int i = 0;
@@ -203,12 +221,14 @@ namespace WarGame.Core
             {
                 if (player.PlayedCards.Cards.ContainsKey($"Player {i + 1}"))
                 {
-                    if (winningCard.Rank == player.PlayerHands.Hand.Cards.Peek().Rank)
+                    if (winningCard.Rank == player.PlayedCards.Cards[$"Player {i + 1}"].Rank)
                     {
                         TiedPlayers.Add(player);
+                        player.SetIndexNumber(i);
 
                     }
                 }
+                player.PlayedCards.Cards.Clear();
                 i++;
             }
             if (TiedPlayers.Count >= 2)
@@ -222,6 +242,10 @@ namespace WarGame.Core
                 
             
         }
+        /// <summary>
+        /// Ends the game if a player has 52 cards
+        /// </summary>
+        /// <returns></returns>
         public bool EndGame()
         {
             foreach (Player player in Players)

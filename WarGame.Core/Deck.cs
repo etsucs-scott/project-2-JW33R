@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
+    /// <summary>
+    /// Holds all the cards in the game 
+    /// </summary>
     public class Deck
     {
         public Card Card { get; private set; }
@@ -28,7 +31,9 @@ namespace WarGame.Core
             }
 
         }
-
+        /// <summary>
+        /// Shuffles the cards in random order
+        /// </summary>
         public void Shuffle() 
         {
             ShuffledCards = new();

@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
+    /// <summary>
+    /// The Player that is playing the game
+    /// </summary>
     public class Player
     {
-        public bool IsTied { get; private set; }
+        public int IndexNumber { get; private set; }
+        public string Name { get; private set; }
         public PlayerHands PlayerHands { get; private set; }
         public PlayedCards PlayedCards { get; private set; }
 
@@ -17,10 +21,21 @@ namespace WarGame.Core
             PlayerHands = new PlayerHands();
             PlayedCards = new PlayedCards();
         }
-
-        public void SetTied(bool isTied)
+        /// <summary>
+        /// Sets the value of the IndexNumber property used for determining which player I'm dealing with
+        /// </summary>
+        /// <param name="index"></param>
+        public void SetIndexNumber(int index)
         {
-            IsTied = isTied;
+            IndexNumber = index;
+        }
+        /// <summary>
+        /// Sets the value of the Name property to name each player
+        /// </summary>
+        /// <param name="name"></param>
+        public void SetName(string name)
+        {
+            Name = name;
         }
     }
 }

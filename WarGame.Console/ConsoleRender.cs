@@ -8,68 +8,92 @@ using WarGame.Core;
 
 namespace WarGame.Cli
 {
+    /// <summary>
+    /// Used to tell the Program class what to render
+    /// </summary>
     public class ConsoleRender
     {
-        public GameEngine gameEngine { get; private set; }
-        public Deck deck { get; private set; }
+        public GameEngine GameEngine { get; private set; }
+        public Deck Deck { get; private set; }
 
         public ConsoleRender()
         {
-            gameEngine = new GameEngine();
-            deck = new Deck();
+            GameEngine = new GameEngine();
+            Deck = new Deck();
         }
-        public void DisplayRoundCards(int countOfTies) 
+        /// <summary>
+        /// Shows the current round cards
+        /// </summary>
+        public void DisplayRoundCards() 
         {
             int cardIndex = 0;
-            foreach (var player in gameEngine.Players)
+            foreach (var player in GameEngine.Players)
             {
                 foreach (var item in player.PlayerHands.Hands)
                 {
-                    Console.WriteLine($"{item.Key} Played {gameEngine.Cards[cardIndex].Rank} of {gameEngine.Cards[cardIndex].Suit} ");
+                    Console.WriteLine($"{item.Key}: {GameEngine.Cards[cardIndex].Rank}");
 
                 }
                 cardIndex++;
             }
-            if (countOfTies > 1)
-            {
-                DisplayTiedCard();
-            }
             
             
         }
+        /// <summary>
+        /// Shows the tied cards between the players if any
+        /// </summary>
         public void DisplayTiedCard() 
         {
-            int index = 0;
-            foreach (var player in gameEngine.TiedPlayers)
+            Console.WriteLine();
+            foreach (var player in GameEngine.TiedPlayers)
             {
-                if (gameEngine.TiedPlayers.Count <= 1)
+                foreach (var key in player.PlayedCards.Cards.Keys)
                 {
-                    Console.WriteLine("In Disolay");
-                    break;
-                }
-                bool playerIndex = player.PlayedCards.Cards.ContainsKey($"Player {index + 1}");
-                if (gameEngine.Cards.Count > gameEngine.Players.Count)
-                {
-
-                    if (playerIndex) 
+                    if (GameEngine.Cards.Count > GameEngine.Players.Count)
                     {
-                        Console.WriteLine($"Player {index + 1} played the {player.PlayedCards.Cards[$"Player {index + 1}"].Rank} of {player.PlayedCards.Cards[$"Player {index + 1}"].Suit}");
-                    }
+                        Console.WriteLine($"{key}: {player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"].Rank}");
 
+                    }
                 }
-                index++;
             }
         }
+        /// <summary>
+        /// Shows the current Player Card Count at the end of the round
+        /// </summary>
         public void DisplayPlayerCardCount() 
         {
-            foreach (var player in gameEngine.Players) 
+            foreach (var player in GameEngine.Players) 
             {
                 foreach (var item in player.PlayerHands.Hands) 
                 {
-                    Console.Write($"{item.Key}: ({item.Value.Cards.Count}) | ");
+                    Console.Write($"{item.Key}: ({item.Value.Cards.Count}),");
                     
                 }
                 
+            }
+        }
+        /// <summary>
+        /// Shows the player with the highest card or highest cards if mulitple players
+        /// </summary>
+        /// <param name="round"></param>
+        /// <param name="roundCap"></param>
+        public void DisplayFinalCard(int round, int roundCap)
+        {
+            if (round >= roundCap)
+            {
+                var highestCard = GameEngine.HighestCards();
+                foreach (Player player in highestCard)
+                {
+                    Console.Write($"{player.Name} ");
+                }
+                if (highestCard.Count > 1)
+                {
+                    Console.Write($"tied for first place");
+                }
+                else
+                {
+                    Console.WriteLine("won this game!");
+                }
             }
         }
     }

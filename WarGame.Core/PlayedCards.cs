@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
+    /// <summary>
+    /// Contains all the cards that the player played during the round
+    /// </summary>
     public class PlayedCards
     {
         public Dictionary<string, Card> Cards { get; private set; }

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
+    /// <summary>
+    /// Represents a playing card with a specific rank and suit.
+    /// </summary>
     public class Card : IComparable<Card>
     {
         public Rank Rank { get; private set; }
@@ -15,7 +18,11 @@ namespace WarGame.Core
             Rank = rank;
             Suit = suit;
         }
-
+        /// <summary>
+        /// Used to let the code know what it should be comparing
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(Card? other)
         {
             if (other == null) 

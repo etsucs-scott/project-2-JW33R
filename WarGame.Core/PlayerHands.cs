@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace WarGame.Core
 {
+    /// <summary>
+    /// Holds the cards that the player could play during the round
+    /// </summary>
     public class PlayerHands
     {
         public Hand Hand { get; private set; }
