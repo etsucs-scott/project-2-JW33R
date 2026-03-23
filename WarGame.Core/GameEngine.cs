@@ -83,9 +83,9 @@ namespace WarGame.Core
             {
                 if (Players[i].PlayerHands.Hand.Cards.Count > 0)
                 {
-                    var card = Players[i].PlayerHands.Hand.Cards.Dequeue();
-                    Players[i].PlayedCards.Cards[$"Player {i + 1}"] = card;
-                    Cards.Add(card);
+                    Cards.Add(Players[i].PlayerHands.Hand.Cards.Peek());
+                    Players[i].PlayedCards.Cards[$"Player {i + 1}"] = Players[i].PlayerHands.Hand.Cards.Dequeue();
+                    
                 }
                 Players[i].SetIndexNumber(0);
             }
@@ -131,6 +131,7 @@ namespace WarGame.Core
                     winningPlayerIndex = player.IndexNumber;
                 }
             }
+            GiveWinnerCards(winningPlayerIndex);
         }
         /// <summary>
         /// Returns the winning card 
@@ -150,8 +151,9 @@ namespace WarGame.Core
             {
                 if (player.PlayerHands.Hand.Cards.Count > 0)
                 {
+                    Cards.Add(player.PlayerHands.Hand.Cards.Peek());
                     player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"] = player.PlayerHands.Hand.Cards.Dequeue();
-                    Cards.Add(player.PlayedCards.Cards[$"Player {player.IndexNumber + 1}"]);
+                    
                 }
             }
             CheckWinnerIfTie();

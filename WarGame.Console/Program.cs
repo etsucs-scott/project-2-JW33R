@@ -8,11 +8,11 @@ int roundCap = 10000;
 
 Console.WriteLine("How many Players are playing? (2-4)");
 int countOfPlayers = int.Parse(Console.ReadLine());
-consoleRender.gameEngine.StartGame(countOfPlayers);
+consoleRender.GameEngine.StartGame(countOfPlayers);
 Console.Clear();
-while (round < roundCap && consoleRender.gameEngine.EndGame() == true) 
+while (round < roundCap && consoleRender.GameEngine.EndGame() == true) 
 {
-    consoleRender.gameEngine.PlayRound();
+    consoleRender.GameEngine.PlayRound();
     Console.WriteLine($"Round {round}");
     Console.WriteLine("---------------------------");
     consoleRender.DisplayRoundCards();
@@ -21,7 +21,7 @@ while (round < roundCap && consoleRender.gameEngine.EndGame() == true)
     consoleRender.DisplayTiedCard();
     Console.WriteLine("\n---------------------------");
     consoleRender.DisplayPlayerCardCount();
-    Console.WriteLine($"\n{consoleRender.gameEngine.PrintWinner(consoleRender.gameEngine.WinningCard)}");
+    Console.WriteLine($"\n{consoleRender.GameEngine.PrintWinner(consoleRender.GameEngine.WinningCard)}");
     Console.ReadLine();
     round++;
     Console.Clear();
